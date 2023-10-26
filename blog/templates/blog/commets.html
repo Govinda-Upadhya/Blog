@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Comments{% endblock title %}
+{% block css_file %}
+<link rel="stylesheet" href="{% static 'blog/post.css' %}">
+<link rel="stylesheet" href="{% static 'blog/index.css' %}">
+{% endblock css_file %}
+{% block content %}
+<form action='/comments' method="POST">
+    {% csrf_token %}
+    {{form}}
+    <button type="submit">send</button>
+</form>
+{% endblock content %}

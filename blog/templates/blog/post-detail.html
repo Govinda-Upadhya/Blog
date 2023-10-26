@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{post.title}}{% endblock title %}
+{% block css_file %}
+<link rel="stylesheet" href="{% static 'blog/post-detail.css' %}">
+<link rel="stylesheet" href="{% static 'blog/index.css' %}">
+{% endblock css_file %}
+{% block content %}
+<section id="summary">
+    <h2>{{post.title}}</h2>
+    <div>
+        {% for tag in post_tags %}
+            <span>{{tag.caption}}</span>
+        {% endfor %}
+    </div>
+    <div id="read-later">
+        <form action="" method="POST">
+            {% csrf_token %}
+            <input type="hidden" value="{{post.id}}" name="post_id">
+            <button>Read Later</button>
+        </form>
+    </div>
+    <article>
+        <img src="{{post.image.url}}" alt="Post Title"/>
+        <address>By <a href="mailto:{{post.author.email_address}}">{{post.author|title}}</a></address>
+        <div>
+            Last updated on <time>{{post.date|date:"d M Y"}}</time>
+        </div>
+    </article>
+</section>
+<main>
+    <p>
+        {{post.content|linebreaks}}
+    </p>
+</main>
+<section id="comments">
+    <ul>
+        {% for comment in comments  %}
+            <li>
+                <h2>{{comment.user_name}}</h2>
+                <p>{{comment.comment|linebreaks}}</p>
+            </li>
+
+        {% endfor %}
+    </ul>
+</section>
+    <div>
+        <form id="comment-form" action="{% url "post-detail-page" post.slug %} " method="POST">
+            {% csrf_token %}
+            {% for form_field in comment_form %}
+                <div class="form-control">
+                    {{form_field.label_tag}}
+                    {{form_field}}
+                    {{form_field.error}}
+                </div>
+            {% endfor %}
+            <button type="submit">Save Comment</button>
+        </form>
+    </div>
+
+{%endblock%}
